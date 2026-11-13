@@ -1,0 +1,20 @@
+{
+  "textures":{"frame":"windcraft:item/wind_glider_frame","cloth":"windcraft:item/wind_glider_sail","particle":"windcraft:item/wind_glider_frame"},
+  "elements":[
+    {"from":[7,-4,7],"to":[9,28,9],"faces":{
+      "up":{"texture":"#frame","uv":[0,0,16,16]},"down":{"texture":"#frame","uv":[0,0,16,16]},"north":{"texture":"#frame","uv":[0,0,16,16]},
+      "south":{"texture":"#frame","uv":[0,0,16,16]},"east":{"texture":"#frame","uv":[0,0,16,16]},"west":{"texture":"#frame","uv":[0,0,16,16]}}},
+    {"from":[5,4,6],"to":[7,26,10],"faces":{
+      "up":{"texture":"#cloth","uv":[0,0,16,16]},"down":{"texture":"#cloth","uv":[0,0,16,16]},"north":{"texture":"#cloth","uv":[0,0,16,16]},
+      "south":{"texture":"#cloth","uv":[0,0,16,16]},"east":{"texture":"#cloth","uv":[0,0,16,16]},"west":{"texture":"#cloth","uv":[0,0,16,16]}}},
+    {"from":[9,4,6],"to":[11,26,10],"faces":{
+      "up":{"texture":"#cloth","uv":[0,0,16,16]},"down":{"texture":"#cloth","uv":[0,0,16,16]},"north":{"texture":"#cloth","uv":[0,0,16,16]},
+      "south":{"texture":"#cloth","uv":[0,0,16,16]},"east":{"texture":"#cloth","uv":[0,0,16,16]},"west":{"texture":"#cloth","uv":[0,0,16,16]}}}
+  ],
+  "display":{
+    "thirdperson_righthand":{"rotation":[0,0,0],"translation":[0,1,0],"scale":[0.65,0.65,0.65]},
+    "thirdperson_lefthand":{"rotation":[0,0,0],"translation":[0,1,0],"scale":[0.65,0.65,0.65]},
+    "firstperson_righthand":{"rotation":[0,-45,0],"translation":[0,0,0],"scale":[0.5,0.5,0.5]},
+    "firstperson_lefthand":{"rotation":[0,45,0],"translation":[0,0,0],"scale":[0.5,0.5,0.5]}
+  }
+}

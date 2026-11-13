@@ -1,0 +1,24 @@
+{
+    "model":  {
+                  "property":  "minecraft:display_context",
+                  "fallback":  {
+                                   "model":  "windcraft:item/wind_glider_stowed",
+                                   "type":  "minecraft:model"
+                               },
+                  "cases":  [
+                                {
+                                    "model":  {
+                                                  "model":  "windcraft:item/wind_glider_icon",
+                                                  "type":  "minecraft:model"
+                                              },
+                                    "when":  [
+                                                 "gui",
+                                                 "ground",
+                                                 "fixed"
+                                             ]
+                                }
+                            ],
+                  "type":  "minecraft:select"
+              }
+}
+

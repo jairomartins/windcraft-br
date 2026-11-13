@@ -1,0 +1,96 @@
+// This is a minimal setup of a Forge mod workspace.
+// For complex examples (including AccessTransformers, Jar-in-Jar, and Mixin), see our examples repository.
+// https://github.com/MinecraftForge/MDKExamples
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+    id 'net.minecraftforge.gradle' version '7.0.40'
+}
+
+version = '0.5.0'
+base.archivesName = 'windcraft'
+group = 'dev.windcraft'
+
+// Mojang ships Java 25 to end users in 26.1+, so your mod should target Java 25.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+// Include generated resources
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+minecraft {
+    runs {
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
+
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            systemProperty 'forge.enabledGameTestNamespaces', 'windcraft'
+            args '--mixin.config=windcraft.mixins.json'
+            args '--mixin.config=windcraft-flight.mixins.json'
+        }
+
+        register('client') {
+            jvmArgs '-Xms512m', '-Xmx2G'
+        }
+
+        register('server') {
+            args '--nogui'
+        }
+
+        register('gameTestServer')
+
+        register('data') {
+            workingDir = layout.projectDirectory.dir('run-data')
+
+            args '--mod', 'windcraft', '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
+        }
+    }
+}
+
+repositories {
+    minecraft.mavenizer(it) // In Kotlin, it = this
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
+
+dependencies {
+    implementation minecraft.dependency('net.minecraftforge:forge:26.3-66.1.8')
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.6'
+    annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // Use the UTF-8 charset for Java compilation
+    // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
+    options.encoding = 'UTF-8'
+}
+
+dependencies { testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'; testRuntimeOnly 'org.junit.platform:junit-platform-launcher' }
+test { useJUnitPlatform() }
+
+jar { manifest { attributes 'MixinConfigs': 'windcraft.mixins.json,windcraft-flight.mixins.json' } }
+
+// Forge 26.3 discovers classes and mods.toml from one root. Compilation and
+// resource processing retain independent directories, then publish one staged output.
+def compiledMain = layout.buildDirectory.dir('classes/java/main')
+def processedMain = layout.buildDirectory.dir('resources/main')
+def developmentMod = layout.buildDirectory.dir('developmentMod/windcraft')
+tasks.named('compileJava', JavaCompile) { destinationDirectory.set(compiledMain) }
+tasks.named('processResources') {
+    // Java's resourcesDir convention can replace destinationDir during configuration.
+    doFirst { destinationDir = processedMain.get().asFile }
+}
+def stageDevelopmentMod = tasks.register('stageDevelopmentMod', Sync) {
+    dependsOn tasks.named('compileJava'), tasks.named('processResources')
+    from compiledMain
+    from sourceSets.main.resources
+    into developmentMod
+}
+sourceSets.main.output.classesDirs.setFrom(developmentMod)
+sourceSets.main.output.classesDirs.builtBy(stageDevelopmentMod)
+sourceSets.main.output.resourcesDir = developmentMod.get().asFile
+tasks.named('classes') { dependsOn stageDevelopmentMod }
+
+

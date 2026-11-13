@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[66,)"
+license="MIT"
+[[mods]]
+modId="windcraft"
+version="0.5.0"
+displayName="WindCraft"
+authors="WindCraft contributors"
+description='''Server-controlled wind, cloud motion, anemometer and craftable Wind Glider.'''
+[[dependencies.windcraft]]
+modId="forge"
+mandatory=true
+versionRange="[66.1.8,67)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.windcraft]]
+modId="minecraft"
+mandatory=true
+versionRange="[26.3,26.4)"
+ordering="NONE"
+side="BOTH"

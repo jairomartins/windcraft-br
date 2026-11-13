@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "windcraft:item/wind_glider"
+                 },
+    "parent":  "minecraft:item/handheld"
+}

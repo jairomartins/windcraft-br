@@ -1,0 +1,227 @@
+{
+    "textures":  {
+                     "sail":  "windcraft:item/wind_glider_sail",
+                     "frame":  "windcraft:item/wind_glider_frame",
+                     "particle":  "windcraft:item/wind_glider_sail"
+                 },
+    "elements":  [
+                     {
+                         "from":  [
+                                      -16,
+                                      13,
+                                      0
+                                  ],
+                         "to":  [
+                                    32,
+                                    13.5,
+                                    24
+                                ],
+                         "shade":  false,
+                         "faces":  {
+                                       "up":  {
+                                                  "uv":  [
+                                                             0,
+                                                             0,
+                                                             16,
+                                                             16
+                                                         ],
+                                                  "texture":  "#sail"
+                                              },
+                                       "down":  {
+                                                    "uv":  [
+                                                               0,
+                                                               0,
+                                                               16,
+                                                               16
+                                                           ],
+                                                    "texture":  "#sail"
+                                                }
+                                   }
+                     },
+                     {
+                         "from":  [
+                                      7,
+                                      12,
+                                      0
+                                  ],
+                         "to":  [
+                                    9,
+                                    14,
+                                    24
+                                ],
+                         "faces":  {
+                                       "up":  {
+                                                  "texture":  "#frame"
+                                              },
+                                       "down":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "north":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "south":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "east":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "west":  {
+                                                    "texture":  "#frame"
+                                                }
+                                   }
+                     },
+                     {
+                         "from":  [
+                                      -16,
+                                      12,
+                                      16
+                                  ],
+                         "to":  [
+                                    32,
+                                    14,
+                                    18
+                                ],
+                         "faces":  {
+                                       "up":  {
+                                                  "texture":  "#frame"
+                                              },
+                                       "down":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "north":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "south":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "east":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "west":  {
+                                                    "texture":  "#frame"
+                                                }
+                                   }
+                     },
+                     {
+                         "from":  [
+                                      7,
+                                      3,
+                                      14
+                                  ],
+                         "to":  [
+                                    9,
+                                    13,
+                                    16
+                                ],
+                         "faces":  {
+                                       "up":  {
+                                                  "texture":  "#frame"
+                                              },
+                                       "down":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "north":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "south":  {
+                                                     "texture":  "#frame"
+                                                 },
+                                       "east":  {
+                                                    "texture":  "#frame"
+                                                },
+                                       "west":  {
+                                                    "texture":  "#frame"
+                                                }
+                                   }
+                     }
+                 ],
+    "display":  {
+                    "thirdperson_righthand":  {
+                                                  "rotation":  [
+                                                                   0,
+                                                                   90,
+                                                                   0
+                                                               ],
+                                                  "translation":  [
+                                                                      0,
+                                                                      9,
+                                                                      0
+                                                                  ],
+                                                  "scale":  [
+                                                                0.65,
+                                                                0.65,
+                                                                0.65
+                                                            ]
+                                              },
+                    "thirdperson_lefthand":  {
+                                                 "rotation":  [
+                                                                  0,
+                                                                  -90,
+                                                                  0
+                                                              ],
+                                                 "translation":  [
+                                                                     0,
+                                                                     9,
+                                                                     0
+                                                                 ],
+                                                 "scale":  [
+                                                               0.65,
+                                                               0.65,
+                                                               0.65
+                                                           ]
+                                             },
+                    "firstperson_righthand":  {
+                                                  "rotation":  [
+                                                                   0,
+                                                                   0,
+                                                                   0
+                                                               ],
+                                                  "translation":  [
+                                                                      -2,
+                                                                      -3,
+                                                                      0
+                                                                  ],
+                                                  "scale":  [
+                                                                0.4,
+                                                                0.4,
+                                                                0.4
+                                                            ]
+                                              },
+                    "firstperson_lefthand":  {
+                                                 "rotation":  [
+                                                                  0,
+                                                                  0,
+                                                                  0
+                                                              ],
+                                                 "translation":  [
+                                                                     2,
+                                                                     -3,
+                                                                     0
+                                                                 ],
+                                                 "scale":  [
+                                                               0.4,
+                                                               0.4,
+                                                               0.4
+                                                           ]
+                                             },
+                    "gui":  {
+                                "rotation":  [
+                                                 30,
+                                                 45,
+                                                 0
+                                             ],
+                                "scale":  [
+                                              0.3,
+                                              0.3,
+                                              0.3
+                                          ]
+                            },
+                    "ground":  {
+                                   "scale":  [
+                                                 0.25,
+                                                 0.25,
+                                                 0.25
+                                             ]
+                               }
+                }
+}

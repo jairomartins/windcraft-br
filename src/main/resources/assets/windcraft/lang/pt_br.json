@@ -1,0 +1,7 @@
+{
+    "item.windcraft.anemometer":  "Anemômetro",
+    "item.windcraft.wind_glider":  "Planador de Vento",
+    "message.windcraft.glider.airborne":  "Use fora da água, sem montar e sem voo criativo para preparar o planador.",
+    "tooltip.windcraft.glider.controls":  "Use: preparar/fechar. Mouse: direção; W/S: inclinar; A/D: curvas; Espaço: sustentar; Shift: fechar.",
+    "tooltip.windcraft.glider.safety":  "Pode ser preparado no chão ou aberto no ar imediatamente. Sustentação depende da velocidade e do vento."
+}
