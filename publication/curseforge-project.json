@@ -1,0 +1,20 @@
+{
+  "projectId": 1802915,
+  "name": "WindCraft BR",
+  "slug": "windcraft-br",
+  "authorPanel": "https://authors.curseforge.com/#/projects/1802915/files",
+  "preview": "https://www.curseforge.com/minecraft/mc-mods/windcraft-br/preview",
+  "version": "0.6.0",
+  "releaseType": "Alpha",
+  "file": "dist/windcraft-0.6.0.jar",
+  "sha256": "8645E0591A5EC15A3001794A8FFCFB57EFE2EF5FE41659BF2756060FE6C33540",
+  "changelog": "publication/curseforge-0.6.0-changelog.md",
+  "minecraft": "26.3",
+  "loader": "Forge",
+  "forgeMinimum": "66.1.8",
+  "java": "25",
+  "environments": ["Client", "Server"],
+  "license": "MIT",
+  "status": "0.6.0 prepared locally; upload not completed because browser and Windows automation failed to initialize",
+  "publishOnceApproved": true
+}
