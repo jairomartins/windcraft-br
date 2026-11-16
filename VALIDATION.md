@@ -1,4 +1,18 @@
-# Verificação — WindCraft 0.5.0
+# Verificação — WindCraft 0.6.0
+
+## Resultado atual — 16/11/2026
+
+`test build runGameTestServer` passou com **41/41 testes JUnit e 3/3 GameTests**.
+Foram verificadas as 16 receitas por cor, rejeição de lãs misturadas, persistência
+da cor no ItemStack, codecs de vento/roll/cor e ausência dos registros suspensos.
+As capturas enviadas pelo autor mostram o leque laranja, pose, HUD e diferentes
+ângulos em jogo. Elas não comprovam todas as cores, pousos, latência ou dois clientes.
+
+Ainda pendentes: teste visual das 16 cores, primeira pessoa, pousos/colisões,
+áudio, FPS com vários pilotos e multiplayer com dois clientes reais.
+Detalhes em [GLIDER_FLIGHT_SYSTEM.md](docs/GLIDER_FLIGHT_SYSTEM.md).
+
+## Histórico da validação 0.5.0
 
 Ambiente: Windows 11, Java 25, Minecraft 26.3 e Forge 66.1.8.
 

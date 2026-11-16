@@ -9,6 +9,9 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(value = AvatarRenderState.class, remap = false)
 public abstract class GliderAvatarStateMixin implements GliderVisualAccess {
     @Unique private GliderVisualState.Frame windcraft$frame = GliderVisualState.Frame.NONE;
+    @Unique private String windcraft$color="orange";
+    public String windcraft$color() { return windcraft$color; }
+    public void windcraft$color(String color) { windcraft$color=color; }
     public GliderVisualState.Frame windcraft$frame() { return windcraft$frame; }
     public void windcraft$frame(GliderVisualState.Frame frame) { windcraft$frame = frame; }
 }

@@ -26,7 +26,7 @@ class GliderVisualStateTest {
         var pose = new GliderVisualState();
         for (int i = 0; i < 100; i++) pose.tick(true, 0, 900, -900, true);
         assertTrue(Math.abs(pose.frame(1).pitch()) <= 15);
-        assertTrue(Math.abs(pose.frame(1).bank()) <= 22);
+        assertTrue(Math.abs(pose.frame(1).bank()) <= 40);
     }
     @Test void renderSamplingDoesNotAdvanceTheAnimation() {
         var pose = new GliderVisualState(); pose.tick(true, 0, 0, 0, true);

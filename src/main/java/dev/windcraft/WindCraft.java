@@ -20,6 +20,7 @@ public final class WindCraft {
     public static final RegistryObject<Item> ANEMOMETER = ITEMS.register("anemometer", () -> new AnemometerItem(new Item.Properties().setId(ITEMS.key("anemometer")).stacksTo(1)));
     public static final RegistryObject<Item> WIND_GLIDER = ITEMS.register("wind_glider", () -> new WindGliderItem(new Item.Properties().setId(ITEMS.key("wind_glider")).durability(256)));
     public WindCraft(FMLJavaModLoadingContext context) {
+        dev.windcraft.glider.FlightGameTests.register(context);
         ITEMS.register(context.getModBusGroup());
         context.registerConfig(ModConfig.Type.SERVER, WindConfig.SPEC);
         context.registerConfig(ModConfig.Type.CLIENT, dev.windcraft.config.WindVisualConfig.SPEC);

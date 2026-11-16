@@ -20,6 +20,7 @@ public abstract class GliderAvatarRendererMixin {
         var frame = dev.windcraft.config.WindVisualConfig.GLIDER_VISUALS.get() && entity instanceof Player p && p.isAlive()
             ? GliderVisuals.frame(p.getUUID(), partial) : GliderVisualState.Frame.NONE;
         ((GliderVisualAccess)state).windcraft$frame(frame);
+        ((GliderVisualAccess)state).windcraft$color(entity instanceof Player p ? GliderVisuals.color(p.getUUID()) : "orange");
         if (!frame.visible()) return;
         state.bodyRot += GliderVisualState.wrap(frame.yaw() - state.bodyRot) * frame.blend();
         state.walkAnimationSpeed *= 1 - frame.blend(); state.swingAnimation *= 1 - frame.blend();

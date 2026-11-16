@@ -20,6 +20,7 @@ public final class GliderClient {
     private static ClientLevel world;
     private static WindNetwork.GliderInput previous;
     private static int sendAge;
+    private static float bank;
     public static void install() {
         WindNetwork.flightReceiver = GliderClient::accept;
         GliderFlightController.clientTravel = GliderClient::travel;
@@ -29,6 +30,7 @@ public final class GliderClient {
         var level = Minecraft.getInstance().level;
         if (level == null || !message.dimension().equals(level.dimension().identifier().toString())) return;
         if (world != level) hudSnapshot = null;
+        bank=message.active() ? message.bank() : 0;
         world = level; receivedTick = level.getGameTime(); snapshot = message.active() ? message : null;
         if (message.active()) hudSnapshot = message;
         if (snapshot == null) previous = null;
@@ -52,6 +54,7 @@ public final class GliderClient {
         }
         if (snapshot == null || mc.isPaused()) return;
         var controls = controls();
+        bank=GliderPhysics.updateBank(bank,controls.turn(),snapshot.settings());
         boolean close = mc.gui.screen() == null && mc.options.keyShift.isDown();
         var next = new WindNetwork.GliderInput(controls.forward(), controls.turn(), controls.flare(), close, sequence);
         boolean changed = previous == null || previous.forward() != next.forward() || previous.turn() != next.turn()
@@ -73,10 +76,11 @@ public final class GliderClient {
         var input = controls();
         // Flare activation is confirmed by the server and expires after its short impulse.
         var predicted = new GliderPhysics.Controls(input.forward(), input.turn(), snapshot.flare() && elapsed < 5);
-        var next = GliderFlightController.calculate(player, conditions, predicted, snapshot.settings());
+        var next = GliderFlightController.calculate(player, conditions, predicted, snapshot.settings(),bank);
         if (GliderPhysics.safeLanding(snapshot.flightTicks() + (int)elapsed, next.y())) player.resetFallDistance();
         GliderFlightController.move(player, next); return true;
     }
+    public static float predictedBank() { return bank; }
     public static void hud(GuiGraphicsExtractor graphics) {
         if (snapshot == null && !GliderVisuals.local(1).visible()) hudSnapshot = null;
         GliderFlightHud.render(graphics, hudSnapshot);

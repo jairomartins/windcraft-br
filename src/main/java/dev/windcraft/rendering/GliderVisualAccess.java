@@ -4,4 +4,6 @@ package dev.windcraft.rendering;
 public interface GliderVisualAccess {
     GliderVisualState.Frame windcraft$frame();
     void windcraft$frame(GliderVisualState.Frame frame);
+    String windcraft$color();
+    void windcraft$color(String color);
 }

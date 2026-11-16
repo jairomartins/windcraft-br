@@ -1,7 +1,7 @@
 {
-    "item.windcraft.anemometer":  "Anemometer",
-    "item.windcraft.wind_glider":  "Wind Glider",
-    "message.windcraft.glider.airborne":  "Use outside water, mounts and creative flight to ready the glider.",
-    "tooltip.windcraft.glider.controls":  "Use: ready/close. Mouse: steer; W/S: pitch; A/D: turn; Space: flare; Sneak: close.",
-    "tooltip.windcraft.glider.safety":  "Ready on the ground or deploy immediately in midair. Lift depends on airspeed and wind."
+    "item.windcraft.anemometer": "Anemometer",
+    "item.windcraft.wind_glider": "Wind Glider",
+    "message.windcraft.glider.airborne": "Use outside water, mounts and creative flight to ready the glider.",
+    "tooltip.windcraft.glider.controls": "Use: ready/close. Mouse: look; W/S: pitch; A/D: bank and turn; Space: flare; Sneak: close.",
+    "tooltip.windcraft.glider.safety": "Ready on the ground or deploy immediately in midair. Lift depends on airspeed and wind."
 }

@@ -14,7 +14,8 @@ public final class GliderVisuals {
     private static final class Pilot {
         final GliderVisualState pose = new GliderVisualState();
         int id; boolean active; long received; Vec3 previous;
-        float heading;
+        float heading, bank;
+        String color="orange";
     }
     private static final Map<UUID, Pilot> PILOTS = new HashMap<>();
     private static ClientLevel world;
@@ -28,10 +29,15 @@ public final class GliderVisuals {
         if (world != level) { clear(); world = level; }
         var pilot = PILOTS.computeIfAbsent(packet.player(), id -> new Pilot());
         if (pilot.id != packet.entityId()) { pilot.pose.reset(); pilot.previous = null; }
+        pilot.bank=packet.bank();
+        pilot.color=dev.windcraft.item.GliderColors.valid(packet.color());
         pilot.id = packet.entityId(); pilot.active = packet.active(); pilot.received = level.getGameTime();
     }
     public static GliderVisualState.Frame frame(UUID id, float partial) {
         var pilot = PILOTS.get(id); return pilot == null ? GliderVisualState.Frame.NONE : pilot.pose.frame(partial);
+    }
+    public static String color(UUID id) {
+        var pilot=PILOTS.get(id); return pilot==null ? "orange" : pilot.color;
     }
     public static GliderVisualState.Frame local(float partial) {
         var player = Minecraft.getInstance().player;
@@ -57,7 +63,7 @@ public final class GliderVisuals {
                 pilot.pose.reset(); pilot.active = false; active = false;
             }
             float heading = movement.horizontalDistanceSqr() > .0001 ? (float)Math.toDegrees(Math.atan2(-movement.x, movement.z)) : p.getYRot();
-            float turn = pilot.previous == null ? 0 : GliderVisualState.wrap(heading - pilot.heading) * 3;
+            float turn = p==mc.player ? GliderClient.predictedBank() : pilot.bank;
             float pitch = (float)-Math.toDegrees(Math.atan2(movement.y, Math.max(.01, movement.horizontalDistance())));
             pilot.pose.tick(active, heading, pitch, turn, WindVisualConfig.TRANSITIONS.get());
             pilot.heading = heading; pilot.previous = p.position();

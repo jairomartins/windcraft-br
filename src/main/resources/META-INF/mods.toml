@@ -3,7 +3,7 @@ loaderVersion="[66,)"
 license="MIT"
 [[mods]]
 modId="windcraft"
-version="0.5.0"
+version="0.6.0"
 displayName="WindCraft"
 authors="WindCraft contributors"
 description='''Server-controlled wind, cloud motion, anemometer and craftable Wind Glider.'''

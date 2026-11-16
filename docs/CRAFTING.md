@@ -1,6 +1,6 @@
 # Como craftar os itens do WindCraft BR
 
-Receitas da versão **0.5.0**, conferidas nos arquivos de receita do mod.
+Receitas da versão **0.6.0**, conferidas nos arquivos de receita do mod.
 Use uma **bancada de trabalho 3×3** e mantenha a disposição abaixo.
 
 ## Planador de Vento
@@ -12,8 +12,12 @@ Use uma **bancada de trabalho 3×3** e mantenha a disposição abaixo.
 | Lã | Graveto | Lã |
 | Linha | Graveto | Linha |
 
-Materiais: **4 lãs de qualquer cor, 1 bambu, 2 gravetos e 2 linhas**.
-Resultado: **1 Planador de Vento** (`windcraft:wind_glider`).
+Materiais: **4 lãs da mesma cor, 1 bambu, 2 gravetos e 2 linhas**.
+Resultado: **1 Planador de Vento** (`windcraft:wind_glider`) na cor da lã usada.
+
+São aceitas as 16 cores vanilla. As quatro lãs precisam ter a mesma cor;
+não há mistura de cores nesta receita. Ícone, item na mão e tecido em voo
+compartilham a cor salva no item. Planadores antigos continuam laranja.
 
 ![Receita real do Planador na bancada de trabalho](screenshots/craft-planador.png)
 
@@ -23,9 +27,9 @@ Segure em uma das mãos e use com o botão direito. Pode preparar no chão antes
 saltar ou ativar imediatamente no ar, sem precisar cair 1,5 bloco. A sustentação
 depende da velocidade relativa do ar e do vento; preparar no chão não cria propulsão.
 
-- **Mouse:** oriente o voo para onde estiver olhando; a curva é gradual.
+- **Mouse:** olhar e contribuição de pitch; A/D comandam as curvas.
 - **W/S:** acelere perdendo altitude ou reduza a velocidade.
-- **A/D:** complemente as curvas.
+- **A/D:** incline o planador e faça curvas.
 - **Espaço:** manobra breve de sustentação, quando houver velocidade suficiente.
 - **Shift** ou usar novamente: feche o planador.
 - **F5:** alterne a perspectiva como no jogo normal.
@@ -53,7 +57,7 @@ vento, a direção em graus/cardinal e a intensidade no local.
 ## Instalação
 
 Requer Minecraft Java **26.3**, Forge **66.1.8** e Java **25**.
-Coloque [windcraft-0.5.0.jar](../dist/windcraft-0.5.0.jar) na pasta `mods` da instância.
+Coloque [windcraft-0.6.0.jar](../dist/windcraft-0.6.0.jar) na pasta `mods` da instância.
 Remova versões antigas e use a mesma versão no cliente e no servidor.
 
 Veja o [README](../README.md) para configuração, comandos e compilação.

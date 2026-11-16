@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "windcraft:wind_glider",
+  "category": "equipment",
+  "pattern": [
+    "LBL",
+    "LGL",
+    "CGC"
+  ],
+  "key": {
+    "L": "minecraft:black_wool",
+    "B": "minecraft:bamboo",
+    "G": "minecraft:stick",
+    "C": "minecraft:string"
+  },
+  "result": {
+    "id": "windcraft:wind_glider",
+    "count": 1,
+    "components": {
+      "minecraft:custom_model_data": {
+        "strings": [
+          "black"
+        ]
+      }
+    }
+  }
+}

@@ -13,6 +13,9 @@ public final class GliderConfig {
     public static final ForgeConfigSpec.DoubleValue WIND = B.defineInRange("windInfluence", .35, 0, 1);
     public static final ForgeConfigSpec.DoubleValue SENSITIVITY = B.defineInRange("controlSensitivity", 1.0, .25, 2);
     public static final ForgeConfigSpec.DoubleValue TURBULENCE = B.defineInRange("turbulence", 1.0, 0, 2);
+    public static final ForgeConfigSpec.DoubleValue MAX_BANK = B.defineInRange("maxBankDegrees",25.0,5,40);
+    public static final ForgeConfigSpec.DoubleValue BANK_SECONDS = B.defineInRange("bankSeconds",.4,.2,1.5);
+    public static final ForgeConfigSpec.DoubleValue LEVEL_SECONDS = B.defineInRange("levelSeconds",.55,.2,2);
     public static final ForgeConfigSpec.IntValue DURABILITY = B.comment("Applied to gliders in player inventories on the server.").defineInRange("durability", 256, 16, 4096);
     public static final ForgeConfigSpec.IntValue WEAR_TICKS = B.defineInRange("durabilityTicks", 40, 10, 200);
     public static final ForgeConfigSpec.BooleanValue THERMALS = B.define("thermals", true);
@@ -20,7 +23,7 @@ public final class GliderConfig {
     public static final ForgeConfigSpec SPEC = B.build();
     public static GliderPhysics.Settings settings() {
         return new GliderPhysics.Settings(DENSITY.get(), AREA.get(), LIFT.get(), DRAG.get(), WIND.get(),
-            MAX_SPEED.get(), SENSITIVITY.get(), TURBULENCE.get());
+            MAX_SPEED.get(), SENSITIVITY.get(), TURBULENCE.get(),MAX_BANK.get(),BANK_SECONDS.get(),LEVEL_SECONDS.get());
     }
     private GliderConfig() {}
 }

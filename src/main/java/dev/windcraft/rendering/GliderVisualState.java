@@ -16,7 +16,7 @@ public final class GliderVisualState {
         if (!transitions) oldProgress = progress;
         yaw += wrap(heading - yaw) * .18f;
         pitch += (Math.clamp(verticalPitch, -15, 15) - pitch) * .12f;
-        bank += (Math.clamp(turn, -22, 22) - bank) * .16f;
+        bank += (Math.clamp(turn, -40, 40) - bank) * .45f;
     }
     public Frame frame(float partial) {
         float t = Math.clamp(partial, 0, 1);

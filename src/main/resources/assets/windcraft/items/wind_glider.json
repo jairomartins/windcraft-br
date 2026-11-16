@@ -1,24 +1,380 @@
 {
-    "model":  {
-                  "property":  "minecraft:display_context",
-                  "fallback":  {
-                                   "model":  "windcraft:item/wind_glider_stowed",
-                                   "type":  "minecraft:model"
-                               },
-                  "cases":  [
-                                {
-                                    "model":  {
-                                                  "model":  "windcraft:item/wind_glider_icon",
-                                                  "type":  "minecraft:model"
-                                              },
-                                    "when":  [
-                                                 "gui",
-                                                 "ground",
-                                                 "fixed"
-                                             ]
-                                }
-                            ],
-                  "type":  "minecraft:select"
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": "white",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_white"
               }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_white"
+          }
+        }
+      },
+      {
+        "when": "orange",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_orange"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_orange"
+          }
+        }
+      },
+      {
+        "when": "magenta",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_magenta"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_magenta"
+          }
+        }
+      },
+      {
+        "when": "light_blue",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_light_blue"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_light_blue"
+          }
+        }
+      },
+      {
+        "when": "yellow",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_yellow"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_yellow"
+          }
+        }
+      },
+      {
+        "when": "lime",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_lime"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_lime"
+          }
+        }
+      },
+      {
+        "when": "pink",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_pink"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_pink"
+          }
+        }
+      },
+      {
+        "when": "gray",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_gray"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_gray"
+          }
+        }
+      },
+      {
+        "when": "light_gray",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_light_gray"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_light_gray"
+          }
+        }
+      },
+      {
+        "when": "cyan",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_cyan"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_cyan"
+          }
+        }
+      },
+      {
+        "when": "purple",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_purple"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_purple"
+          }
+        }
+      },
+      {
+        "when": "blue",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_blue"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_blue"
+          }
+        }
+      },
+      {
+        "when": "brown",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_brown"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_brown"
+          }
+        }
+      },
+      {
+        "when": "green",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_green"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_green"
+          }
+        }
+      },
+      {
+        "when": "red",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_red"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_red"
+          }
+        }
+      },
+      {
+        "when": "black",
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+            {
+              "when": [
+                "gui"
+              ],
+              "model": {
+                "type": "minecraft:model",
+                "model": "windcraft:item/glider/icon_black"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/fan_black"
+          }
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+        {
+          "when": [
+            "gui"
+          ],
+          "model": {
+            "type": "minecraft:model",
+            "model": "windcraft:item/glider/icon_orange"
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "windcraft:item/glider/fan_orange"
+      }
+    }
+  }
 }
-

@@ -14,6 +14,7 @@ public final class GliderPlayerData {
     public GliderPhysics.Settings settings;
     public final GliderState state = new GliderState();
     public float forward, turn;
+    public float bank;
     public int flareTicks, flareCooldown;
     public boolean flareHeld;
     public boolean airborne;

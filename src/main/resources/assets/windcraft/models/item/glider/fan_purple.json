@@ -1,0 +1,7 @@
+{
+  "parent": "windcraft:item/wind_glider_fan",
+  "textures": {
+    "atlas": "windcraft:entity/glider/purple",
+    "particle": "windcraft:entity/glider/purple"
+  }
+}

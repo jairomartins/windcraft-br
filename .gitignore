@@ -19,3 +19,7 @@ logs/
 *.key
 dist/*
 !dist/windcraft-0.5.0.jar
+
+# Local recovery snapshots (archived sources are tracked separately).
+recovery/
+!dist/windcraft-0.6.0.jar

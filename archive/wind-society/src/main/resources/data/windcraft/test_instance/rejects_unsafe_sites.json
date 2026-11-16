@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "windcraft:rejects_unsafe_sites",
+  "environment": "minecraft:default",
+  "structure": "windcraft:village_test_space",
+  "max_ticks": 100
+}

@@ -31,6 +31,13 @@ public final class GliderFlightController {
             && !p.isFallFlying() && !p.isSleeping() && !p.isInPowderSnow;
     }
     public static boolean isDeployed(ServerPlayer p) { return FLIGHTS.containsKey(p.getUUID()); }
+    public static float bank(ServerPlayer p) {
+        var data=FLIGHTS.get(p.getUUID()); return data==null ? 0 : data.bank;
+    }
+    public static String color(ServerPlayer p) {
+        var data=FLIGHTS.get(p.getUUID());
+        return data==null ? "orange" : dev.windcraft.item.GliderColors.of(data.stack);
+    }
     private static boolean equipped(Player p, GliderPlayerData data) {
         return p.getItemInHand(data.hand) == data.stack && !data.stack.isEmpty()
             && data.stack.getItem() instanceof WindGliderItem && !data.stack.isBroken();
@@ -112,6 +119,7 @@ public final class GliderFlightController {
         if (data.flareTicks > 0) data.flareTicks--;
         if (data.flareCooldown > 0) data.flareCooldown--;
         if (p.level().getGameTime() - data.lastInputTick > 20) { data.forward = data.turn = 0; data.flareHeld = false; }
+        data.bank=GliderPhysics.updateBank(data.bank,data.turn,data.settings);
         // Allow ordinary packet batching and external impulses, reject grossly abnormal travel.
         double displacement = p.position().subtract(data.lastPosition).horizontalDistance();
         if (data.flightTicks > 10 && displacement > data.settings.maxSpeed() * 4 + 1 && !p.isInPostImpulseGraceTime()) {
@@ -141,7 +149,7 @@ public final class GliderFlightController {
         var data = FLIGHTS.get(p.getUUID());
         var conditions = new GliderPhysics.Conditions(data.conditions.wind(), data.conditions.updraft(), p.level().getGameTime(), data.conditions.seed());
         var controls = new GliderPhysics.Controls(data.forward, data.turn, data.flareTicks > 0);
-        var next = calculate(p, conditions, controls, data.settings);
+        var next = calculate(p, conditions, controls, data.settings,data.bank);
         data.verticalSpeed = next.y();
         if (GliderPhysics.safeLanding(data.flightTicks, next.y())) p.resetFallDistance();
         double speed = Math.hypot(next.x(), next.z());
@@ -156,6 +164,10 @@ public final class GliderFlightController {
     public static GliderPhysics.Velocity calculate(Player p, GliderPhysics.Conditions conditions, GliderPhysics.Controls controls, GliderPhysics.Settings settings) {
         Vec3 v = p.getDeltaMovement();
         return GliderPhysics.step(new GliderPhysics.Velocity(v.x, v.y, v.z), p.getYRot(), p.getXRot(), controls, conditions, settings);
+    }
+    public static GliderPhysics.Velocity calculate(Player p,GliderPhysics.Conditions conditions,GliderPhysics.Controls controls,GliderPhysics.Settings settings,float bank) {
+        Vec3 v=p.getDeltaMovement();
+        return GliderPhysics.step(new GliderPhysics.Velocity(v.x,v.y,v.z),p.getYRot(),p.getXRot(),controls,conditions,settings,bank);
     }
     public static void move(Player p, GliderPhysics.Velocity velocity) {
         p.setDeltaMovement(velocity.x(), velocity.y(), velocity.z()); p.move(MoverType.SELF, p.getDeltaMovement());

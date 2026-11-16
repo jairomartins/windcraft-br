@@ -1,13 +1,13 @@
-# WindCraft BR 0.5.0 — Alpha
+# WindCraft BR 0.6.0 — Alpha
 
 Vento dinâmico, nuvens em movimento, Anemômetro e um Planador de Vento craftável.
 Simulação controlada pelo servidor para Minecraft Java com Forge.
 
-![Planador de Vento aberto durante o voo](docs/screenshots/planador-frontal.png)
+![Planador de Vento em leque durante o voo](docs/screenshots/planador-curva-0.6.0.png)
 
-Captura real da versão 0.5.0: planador aberto, pose de voo e HUD de vento.
+Captura real da versão 0.6.0 enviada pelo autor: asas em leque, pose de voo e HUD de vento.
 
-![Planeio próximo às montanhas](docs/screenshots/voo-montanhas.png)
+![Planeio próximo às montanhas](docs/screenshots/planador-montanhas-0.6.0.png)
 
 Captura real em terceira pessoa, com velocidade, altitude Y e corrente ascendente.
 A perspectiva é a escolhida pelo jogador; primeira pessoa também é suportada.
@@ -17,9 +17,23 @@ A perspectiva é a escolhida pelo jogador; primeira pessoa também é suportada.
 Captura enviada pelo autor, mostrando as partículas ambientais no mundo.
 
 **[Como craftar os itens: Planador e Anemômetro](docs/CRAFTING.md)** ·
-**[Testes e limitações da Alpha](VALIDATION.md)**
+**[Testes e limitações da Alpha](VALIDATION.md)** ·
+**[Sistema de voo 0.6.0](docs/GLIDER_FLIGHT_SYSTEM.md)**
 
-Download do mod: [windcraft-0.5.0.jar](dist/windcraft-0.5.0.jar).
+## Novidades da 0.6.0
+
+- Novo modelo com asas laranja em leque, varetas de madeira e cauda menor.
+- As 16 cores de lã definem a cor do tecido e do ícone. Use quatro lãs da mesma cor.
+- A/D inclinam o equipamento e produzem curvas reais, com retorno suave ao soltar.
+- Vento relativo, ascendentes, arrasto e limites de velocidade preservados.
+- Foco no vento e no planador: vila, monge e bisão foram retirados do código ativo;
+  suas fontes permanecem em `archive/wind-society/`.
+
+Em mundos de testes antigos que contenham monge ou bisão, use uma cópia: esses
+IDs de entidade não estão registrados nesta versão. Cliente e servidor devem
+usar a mesma versão, com protocolo de rede 7.
+
+Download do mod: [windcraft-0.6.0.jar](dist/windcraft-0.6.0.jar).
 Esta é uma versão Alpha; a validação completa de áudio, multiplayer e colisões
 ainda está pendente. Não há turbinas ou barcos nesta versão.
 
@@ -29,12 +43,12 @@ Projeto baseado no [MDK oficial](https://files.minecraftforge.net/net/minecraftf
 ## Instalar ou atualizar
 
 1. Instale Forge **66.1.8** para Minecraft 26.3 e selecione esse perfil no Launcher.
-2. Copie `dist/windcraft-0.5.0.jar` para `%APPDATA%\.minecraft\mods`, ou para a pasta
+2. Copie `dist/windcraft-0.6.0.jar` para `%APPDATA%\.minecraft\mods`, ou para a pasta
    `mods` da instância. Retire os JARs anteriores do WindCraft dessa pasta.
-3. Em multiplayer, use WindCraft 0.5.0 no servidor e em todos os clientes.
+3. Em multiplayer, use WindCraft 0.6.0 no servidor e em todos os clientes.
 
 O Forge 66.1.0 não atende à dependência deste projeto.
-Use a mesma versão 0.5.0 nos dois lados para manter as regras de ativação consistentes.
+Use a mesma versão 0.6.0 nos dois lados para manter as regras de ativação consistentes.
 
 **O balanço dos blocos de folhas foi removido**, assim como os mixins e os shaders
 de terreno correspondentes. As folhas usam a geometria original do Minecraft.
@@ -45,7 +59,7 @@ As partículas ambientais transportadas pelo vento e o movimento das nuvens cont
 Item `windcraft:wind_glider`, disponível na aba criativa de ferramentas/utilidades.
 Para testes: `/give @s windcraft:wind_glider`.
 
-Receita de bancada, com qualquer cor de lã:
+Receita de bancada, com quatro lãs da mesma cor:
 
 ```text
 L B L
@@ -53,7 +67,9 @@ L G L
 C G C
 ```
 
-L = lã (4), B = bambu (1), G = graveto (2), C = linha (2).
+L = lã (4 da mesma cor), B = bambu (1), G = graveto (2), C = linha (2).
+O tecido e o ícone acompanham a cor usada; não há mistura de cores. Itens antigos
+sem cor salva continuam laranja.
 
 Segure o planador na mão principal ou secundária e use imediatamente, sem queda mínima. No chão ele fica preparado e passa a planar ao saltar; não cria propulsão. No ar, a ativação é imediata. Mantenha altura suficiente para frear:
 abrir perto do chão durante uma queda rápida ainda pode causar dano.
@@ -63,7 +79,8 @@ abrir perto do chão durante uma queda rápida ainda pode causar dano.
 | Ativar ou desativar o planeio | Clique direito / usar item |
 | Inclinar para acelerar, perdendo mais altitude | W |
 | Inclinar para reduzir a velocidade | S |
-| Curvar e orientar o voo | Mouse: olhe para onde deseja ir; A / D complementam a curva |
+| Inclinar e curvar | A / D; solte para retornar suavemente ao nível |
+| Olhar e contribuir ao pitch | Mouse; o olhar não comanda a guinada |
 | Manobra curta de sustentação | Espaço, com velocidade horizontal de pelo menos 5 m/s |
 | Desativar o planeio | Shift |
 
@@ -248,7 +265,7 @@ $env:GRADLE_USER_HOME = "$PWD\.gradle-user"
 .\gradlew.bat runClient
 ```
 
-Saída: `build\libs\windcraft-0.5.0.jar`. O ZIP em `dist` contém o projeto sem caches.
+Saída: `build\libs\windcraft-0.6.0.jar`. O ZIP em `dist` contém o projeto sem caches.
 A primeira compilação baixa Gradle/Minecraft/Forge e pode demorar vários minutos.
 Se um daemon antigo tiver restrições de rede, use `--no-daemon --no-configuration-cache`.
 As saídas de classes e recursos ficam separadas (`merge-source-sets=false`), para

@@ -1,5 +1,8 @@
 # Planador — pose e renderização 0.5.0
 
+> Histórico: o modelo foi substituído pelo leque voxel em 16/11/2026.
+> Consulte `GLIDER_FLIGHT_SYSTEM.md` para recursos e controles atuais.
+
 O item de inventário mantém o ícone próprio. Fora do voo, o modelo Java de item
 `wind_glider_stowed.json` é exibido na mão. Em voo, os estados de item nas mãos
 são ocultados apenas na cópia de renderização, e uma camada desenha um único
