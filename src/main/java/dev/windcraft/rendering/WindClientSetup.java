@@ -9,6 +9,6 @@ import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = "windcraft", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class WindClientSetup {
     @SubscribeEvent public static void setup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> { WindClient.install(); GliderClient.install(); GliderVisuals.install(); });
+        event.enqueueWork(() -> { WindClient.install(); EnvironmentalEffects.install(); GliderClient.install(); GliderVisuals.install(); });
     }
 }

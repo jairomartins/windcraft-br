@@ -23,3 +23,10 @@ dist/*
 # Local recovery snapshots (archived sources are tracked separately).
 recovery/
 !dist/windcraft-0.6.0.jar
+!dist/windcraft-0.6.1.jar
+
+# Local QA game instances and generated dependencies.
+/qa/
+
+# Changelog extracted by the Forge installer.
+/changelog.txt

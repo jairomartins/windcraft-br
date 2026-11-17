@@ -35,13 +35,14 @@ public final class WindClient {
         if (previousLevel != mc.level) {
             carried.forEach(net.minecraft.client.particle.Particle::remove);
             carried.clear(); previousLevel = mc.level; vx = vz = 0;
-            animation.reset(); target = null; cloudsActive = false;
+            animation.reset(); EnvironmentalEffects.reset(); target = null; cloudsActive = false;
         }
         if (mc.level == null || mc.player == null) { target = null; vx = vz = 0; return; }
         if (mc.isPaused()) return;
         if (target == null || ++age > 120 || !target.dimension().equals(mc.level.dimension().identifier().toString())) {
-            vx = vz = 0; animation.tick(0, 0, WindVisualConfig.CLOUD_SCALE.get()); return;
+            vx = vz = 0; EnvironmentalEffects.reset(); animation.tick(0, 0, WindVisualConfig.CLOUD_SCALE.get()); return;
         }
+        EnvironmentalEffects.tick(target);
         animation.tick(target.atmosphericSpeed(), target.direction(), WindVisualConfig.CLOUD_SCALE.get());
         WindSample wind = new WindSample(target.speed(), target.direction());
         vx += (wind.xPerTick() - vx) * 0.12;

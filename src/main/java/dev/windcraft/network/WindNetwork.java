@@ -11,17 +11,17 @@ public final class WindNetwork {
     public static Consumer<Snapshot> receiver = p -> {};
     public record FlightSnapshot(String dimension, boolean active, double speed, double direction, double updraft,
                                  long tick, long seed, int flightTicks, dev.windcraft.glider.GliderPhysics.Settings settings,
-                                 boolean flare, double altitude, float bank) {}
+                                 boolean flare, double altitude, float bank, float heading) {}
     public record GliderInput(float forward, float turn, boolean flare, boolean close, long sequence) {}
     public static Consumer<FlightSnapshot> flightReceiver = p -> {};
-    public record FlightVisual(int entityId, java.util.UUID player, String dimension, boolean active, float bank, String color) {}
+    public record FlightVisual(int entityId, java.util.UUID player, String dimension, boolean active, float bank, String color, float heading) {}
     public static Consumer<FlightVisual> visualReceiver = p -> {};
     private static SimpleChannel channel;
     public static StreamCodec<RegistryFriendlyByteBuf, FlightSnapshot> flightCodec() {
         return new StreamCodec<>() {
             public FlightSnapshot decode(RegistryFriendlyByteBuf b) {
                 return new FlightSnapshot(b.readUtf(256), b.readBoolean(), b.readDouble(), b.readDouble(), b.readDouble(), b.readLong(), b.readLong(), b.readVarInt(),
-                    new dev.windcraft.glider.GliderPhysics.Settings(b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble()), b.readBoolean(), b.readDouble(), b.readFloat());
+                    new dev.windcraft.glider.GliderPhysics.Settings(b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble()), b.readBoolean(), b.readDouble(), b.readFloat(), b.readFloat());
             }
             public void encode(RegistryFriendlyByteBuf b, FlightSnapshot p) {
                 b.writeUtf(p.dimension, 256); b.writeBoolean(p.active); b.writeDouble(p.speed); b.writeDouble(p.direction);
@@ -30,18 +30,18 @@ public final class WindNetwork {
                 b.writeDouble(s.density()); b.writeDouble(s.area()); b.writeDouble(s.lift()); b.writeDouble(s.drag());
                 b.writeDouble(s.wind()); b.writeDouble(s.maxSpeed()); b.writeDouble(s.sensitivity()); b.writeDouble(s.turbulence());
                 b.writeDouble(s.maxBank()); b.writeDouble(s.bankSeconds()); b.writeDouble(s.levelSeconds());
-                b.writeBoolean(p.flare); b.writeDouble(p.altitude); b.writeFloat(p.bank);
+                b.writeBoolean(p.flare); b.writeDouble(p.altitude); b.writeFloat(p.bank); b.writeFloat(p.heading);
             }
         };
     }
     public static StreamCodec<RegistryFriendlyByteBuf, FlightVisual> visualCodec() {
         return new StreamCodec<>() {
-            public FlightVisual decode(RegistryFriendlyByteBuf b) { return new FlightVisual(b.readVarInt(), b.readUUID(), b.readUtf(256), b.readBoolean(), b.readFloat(), b.readUtf(32)); }
-            public void encode(RegistryFriendlyByteBuf b, FlightVisual p) { b.writeVarInt(p.entityId); b.writeUUID(p.player); b.writeUtf(p.dimension, 256); b.writeBoolean(p.active); b.writeFloat(p.bank); b.writeUtf(p.color,32); }
+            public FlightVisual decode(RegistryFriendlyByteBuf b) { return new FlightVisual(b.readVarInt(), b.readUUID(), b.readUtf(256), b.readBoolean(), b.readFloat(), b.readUtf(32), b.readFloat()); }
+            public void encode(RegistryFriendlyByteBuf b, FlightVisual p) { b.writeVarInt(p.entityId); b.writeUUID(p.player); b.writeUtf(p.dimension, 256); b.writeBoolean(p.active); b.writeFloat(p.bank); b.writeUtf(p.color,32); b.writeFloat(p.heading); }
         };
     }
     public static void init() {
-        channel = ChannelBuilder.named("windcraft:wind").networkProtocolVersion(7).simpleChannel();
+        channel = ChannelBuilder.named("windcraft:wind").networkProtocolVersion(8).simpleChannel();
         StreamCodec<RegistryFriendlyByteBuf, Snapshot> codec = new StreamCodec<>() {
             public Snapshot decode(RegistryFriendlyByteBuf b) { return new Snapshot(b.readUtf(256), b.readDouble(), b.readDouble(), b.readDouble(), b.readBoolean()); }
             public void encode(RegistryFriendlyByteBuf b, Snapshot p) { b.writeUtf(p.dimension, 256); b.writeDouble(p.speed); b.writeDouble(p.direction); b.writeDouble(p.atmosphericSpeed); b.writeBoolean(p.particles); }
@@ -70,13 +70,16 @@ public final class WindNetwork {
         channel.send(new FlightSnapshot(player.level().dimension().identifier().toString(), active,
             active ? conditions.wind().speed() : 0, active ? conditions.wind().direction() : 0,
             active ? conditions.updraft() : 0, player.level().getGameTime(), active ? conditions.seed() : 0, flightTicks, settings, flare,
-            player.getY() - player.level().getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.blockPosition().getX(), player.blockPosition().getZ()), dev.windcraft.glider.GliderFlightController.bank(player)),
+            player.getY() - player.level().getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.blockPosition().getX(), player.blockPosition().getZ()), dev.windcraft.glider.GliderFlightController.bank(player), dev.windcraft.glider.GliderFlightController.heading(player)),
             PacketDistributor.PLAYER.with(player));
     }
     private static FlightVisual visual(ServerPlayer player, boolean active) {
-        return new FlightVisual(player.getId(), player.getUUID(), player.level().dimension().identifier().toString(), active, dev.windcraft.glider.GliderFlightController.bank(player), dev.windcraft.glider.GliderFlightController.color(player));
+        return new FlightVisual(player.getId(), player.getUUID(), player.level().dimension().identifier().toString(), active, dev.windcraft.glider.GliderFlightController.bank(player), dev.windcraft.glider.GliderFlightController.color(player), dev.windcraft.glider.GliderFlightController.heading(player));
+    }
+    public static FlightVisual visual(ServerPlayer player) {
+        return visual(player, dev.windcraft.glider.GliderFlightController.isDeployed(player));
     }
     public static void sendVisualTo(ServerPlayer observer, ServerPlayer pilot) {
-        channel.send(visual(pilot, dev.windcraft.glider.GliderFlightController.isFlying(pilot)), PacketDistributor.PLAYER.with(observer));
+        channel.send(visual(pilot), PacketDistributor.PLAYER.with(observer));
     }
 }

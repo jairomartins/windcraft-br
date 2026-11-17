@@ -21,7 +21,6 @@ public final class WindGliderItem extends Item {
         }
         if (player instanceof ServerPlayer server && GliderFlightController.isDeployed(server)) {
             GliderFlightController.stop(server);
-            player.startUsingItem(hand);
             player.getCooldowns().addCooldown(player.getItemInHand(hand), 10);
             return InteractionResult.CONSUME;
         }

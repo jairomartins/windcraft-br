@@ -1,5 +1,19 @@
 # Sistema de voo — reformulação por marcos
 
+## Correção 0.6.1 — rumo próprio e protocolo 8
+
+O rumo é capturado ao abrir no ar ou no salto após preparar no chão. A câmera
+continua livre; A/D inclinam e alteram o rumo. A física usa a orientação da asa
+em vez de escolher a direção do vento relativo. Arrasto mantém deriva; fluxo
+por trás não gera sustentação invertida que lance o piloto de volta à encosta.
+O vento forte ainda pode produzir recuo no solo; não há propulsão ou imunidade.
+
+Servidor e previsão local guardam rumo; FlightSnapshot e FlightVisual o enviam
+ao piloto e aos observadores. A pose usa esse rumo, separado da trajetória.
+Primeiro estado aéreo enviado no tick inicial, depois a cada 5 ticks. Protocolo 8:
+atualizar todos os clientes e o servidor, inclusive builds anteriores da 0.6.1.
+O restante deste documento descreve o desenvolvimento histórico da base 0.6.0.
+
 ## Inspeção e dependências antes da remoção
 
 Base: Minecraft 26.3, Forge 66.1.8, ForgeGradle 7.0.40, Java 25,

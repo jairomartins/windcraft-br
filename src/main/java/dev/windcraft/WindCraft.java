@@ -34,7 +34,10 @@ public final class WindCraft {
                 && e.getTarget() instanceof net.minecraft.server.level.ServerPlayer pilot) WindNetwork.sendVisualTo(observer, pilot);
         });
         net.minecraftforge.event.entity.living.LivingFallEvent.BUS.addListener(GliderFlightController::land);
-        net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(e -> GliderFlightController.remove(e.getEntity()));
+        net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(e -> {
+            if (e.getEntity() instanceof net.minecraft.server.level.ServerPlayer p) GliderFlightController.stop(p);
+            GliderFlightController.remove(e.getEntity());
+        });
         net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent.BUS.addListener(e -> {
             if (e.getEntity() instanceof net.minecraft.server.level.ServerPlayer p) { GliderFlightController.stop(p); GliderFlightController.remove(p); }
         });

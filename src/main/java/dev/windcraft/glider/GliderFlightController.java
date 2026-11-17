@@ -34,6 +34,9 @@ public final class GliderFlightController {
     public static float bank(ServerPlayer p) {
         var data=FLIGHTS.get(p.getUUID()); return data==null ? 0 : data.bank;
     }
+    public static float heading(ServerPlayer p) {
+        var data=FLIGHTS.get(p.getUUID()); return data==null ? p.getYRot() : data.heading;
+    }
     public static String color(ServerPlayer p) {
         var data=FLIGHTS.get(p.getUUID());
         return data==null ? "orange" : dev.windcraft.item.GliderColors.of(data.stack);
@@ -61,6 +64,7 @@ public final class GliderFlightController {
         var data = new GliderPlayerData(p.level().dimension().identifier().toString(), hand, stack,
             p.getDeltaMovement().y, sample(p));
         data.airborne = !p.onGround();
+        data.heading = GliderPhysics.wrapHeading(p.getYRot());
         data.lastInputTick = p.level().getGameTime(); data.lastPosition = p.position();
         FLIGHTS.put(p.getUUID(), data);
         WindNetwork.sendFlight(p, true, data.conditions, 0, data.settings, false);
@@ -68,10 +72,12 @@ public final class GliderFlightController {
         return true;
     }
     public static void stop(ServerPlayer p) {
-        var data = FLIGHTS.remove(p.getUUID());
-        if (data == null || !data.state.flying()) return;
+        var data = FLIGHTS.get(p.getUUID());
+        if (data == null) return;
         data.state.close();
+        if (p.isUsingItem() && p.getUseItem() == data.stack) p.stopUsingItem();
         WindNetwork.sendFlight(p, false, null, 0, data.settings, false);
+        FLIGHTS.remove(p.getUUID());
         p.level().playSound(null, p.blockPosition(), SoundEvents.BAMBOO_HIT, SoundSource.PLAYERS, .6f, .8f);
     }
     public static void remove(Player p) {
@@ -86,9 +92,10 @@ public final class GliderFlightController {
         var data = FLIGHTS.get(p.getUUID());
         if (data == null || !canDeploy(p) || !equipped(p, data) || input.sequence() <= data.lastSequence) return;
         long now = p.level().getGameTime();
+        // Closing is a safety action, including when packets are batched in one tick.
+        if (input.close()) { stop(p); return; }
         if (now == data.lastInputTick && data.lastSequence >= 0) return;
         data.lastSequence = input.sequence(); data.lastInputTick = now;
-        if (input.close()) { stop(p); return; }
         data.forward = input.forward(); data.turn = input.turn();
         if (input.flare() && !data.flareHeld && data.flareCooldown == 0) {
             double speed = Math.hypot(p.getDeltaMovement().x, p.getDeltaMovement().z) * 20;
@@ -105,12 +112,14 @@ public final class GliderFlightController {
         if (!data.airborne && p.onGround() && canDeploy(p) && equipped(p, data)) {
             // Ready on the ground; no thrust, wear, exhaustion or gravity override until jumping.
             data.lastPosition = p.position();
+            data.heading = GliderPhysics.wrapHeading(p.getYRot());
             if (p.level().getGameTime() % 5 == 0) {
                 data.conditions = sample(p);
                 WindNetwork.sendFlight(p, true, data.conditions, 0, data.settings, false);
             }
             return;
         }
+        if (!data.airborne) data.heading = GliderPhysics.wrapHeading(p.getYRot());
         data.airborne = true;
         if (data.state.flying() && (!eligible(p) || !equipped(p, data))) stop(p);
         if (data.state.phase() == GliderState.Phase.CLOSED) { FLIGHTS.remove(p.getUUID()); return; }
@@ -127,7 +136,7 @@ public final class GliderFlightController {
             stop(p); return;
         }
         data.lastPosition = p.position();
-        if (data.flightTicks % 5 == 0) {
+        if (data.flightTicks == 1 || data.flightTicks % 5 == 0) {
             data.conditions = sample(p); data.settings = GliderConfig.settings();
             WindNetwork.sendFlight(p, true, data.conditions, data.flightTicks, data.settings, data.flareTicks > 0);
         }
@@ -149,7 +158,12 @@ public final class GliderFlightController {
         var data = FLIGHTS.get(p.getUUID());
         var conditions = new GliderPhysics.Conditions(data.conditions.wind(), data.conditions.updraft(), p.level().getGameTime(), data.conditions.seed());
         var controls = new GliderPhysics.Controls(data.forward, data.turn, data.flareTicks > 0);
-        var next = calculate(p, conditions, controls, data.settings,data.bank);
+        // Vanilla may begin the jump after PlayerTick.Pre in this very tick.
+        if (!data.airborne) { data.heading = GliderPhysics.wrapHeading(p.getYRot()); data.airborne = true; }
+        var v = p.getDeltaMovement();
+        data.heading = GliderPhysics.updateHeading(data.heading, data.bank,
+            new GliderPhysics.Velocity(v.x, v.y, v.z), conditions, data.settings);
+        var next = calculate(p, conditions, controls, data.settings, data.bank, data.heading);
         data.verticalSpeed = next.y();
         if (GliderPhysics.safeLanding(data.flightTicks, next.y())) p.resetFallDistance();
         double speed = Math.hypot(next.x(), next.z());
@@ -171,6 +185,11 @@ public final class GliderFlightController {
     }
     public static void move(Player p, GliderPhysics.Velocity velocity) {
         p.setDeltaMovement(velocity.x(), velocity.y(), velocity.z()); p.move(MoverType.SELF, p.getDeltaMovement());
+    }
+    public static GliderPhysics.Velocity calculate(Player p, GliderPhysics.Conditions conditions, GliderPhysics.Controls controls,
+                                                  GliderPhysics.Settings settings, float bank, float heading) {
+        Vec3 v = p.getDeltaMovement();
+        return GliderPhysics.stepWithHeading(new GliderPhysics.Velocity(v.x, v.y, v.z), heading, p.getXRot(), controls, conditions, settings, bank);
     }
     public static void land(LivingFallEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;

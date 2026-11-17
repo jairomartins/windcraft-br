@@ -8,13 +8,13 @@ WindCraft BR adds server-controlled wind and a craftable Wind Glider to Minecraf
 - Wind-driven clouds and nearby environmental particles. Leaf blocks keep their vanilla geometry.
 - An anemometer that reports wind speed and direction.
 - A craftable glider affected by headwind, tailwind, crosswind, turbulence and updrafts.
-- Mouse-directed flight, a compact flight HUD and continuous wind audio.
+- A/D banking and turning, W/S pitch control, free mouse look, a compact flight HUD and continuous wind audio.
 - Your current first-person or third-person perspective is preserved; F5 works normally.
 - Durability, drag and limited flare maneuvers keep the glider from providing unlimited powered flight.
 
 ## Requirements and installation
 
-Minecraft Java 26.3, Forge 66.1.8 and Java 25 are required. Install the JAR in the instance's mods folder and remove older WindCraft JARs. Install version 0.5.0 on both the server and each client. Fabric and NeoForge are not supported by this file.
+Minecraft Java 26.3, Forge 66.1.8 and Java 25 are required. Install the JAR in the instance's mods folder and remove older WindCraft JARs. Install version 0.6.1 on both the server and each client. Fabric and NeoForge are not supported by this file.
 
 ## Crafting the Wind Glider
 

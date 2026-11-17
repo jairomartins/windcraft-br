@@ -1,5 +1,27 @@
 # WindCraft BR — alterações
 
+## 0.6.1 Alpha — candidata local — 16/11/2026
+
+- Corrigida a inversão na decolagem: rumo capturado no salto e alterado por A/D,
+  independente da direção do vento e do olhar. Deriva preservada; fluxo de cauda
+  não produz mais sustentação com lançamento artificial contra o vento.
+- Piloto e observadores usam rumo sincronizado também na pose; protocolo 8.
+- Corrigidas texturas ausentes nos modelos de item das 16 cores: os tecidos usados
+  também pelo renderizador de voo agora são incluídos no atlas de itens.
+- Shift para fechar deixa de ser descartado quando outro comando chega no mesmo tick.
+- Fechamento transmite cor e inclinação originais antes de remover o estado do piloto.
+- Snapshot inicial do observador passa a usar o mesmo estado de preparação das atualizações periódicas.
+- Fechar por comando ou uso do item encerra o uso do planador gerenciado.
+- Logout anuncia fechamento antes da limpeza do estado.
+- Novo GameTest cobre preparação, cancelamento agrupado, entradas inválidas/antigas,
+  timeout já existente, reabertura, toggle, remoção do item e retorno ao movimento vanilla.
+- Coeficientes físicos, controles, receitas, cores e dependências preservados.
+
+Validação automatizada e limitações em [VALIDATION.md](VALIDATION.md).
+Diagnóstico, critérios de conclusão e roteiro em [STABILITY_0.6.1.md](docs/STABILITY_0.6.1.md).
+Continuam pendentes cliente limpo, aparência/áudio, colisões, desempenho real e
+multiplayer com dois clientes e latência. Não declarada estável; sem publicação.
+
 ## 0.6.0 Alpha — 16/11/2026
 
 - Planador original com asas voxel em leque, varetas de madeira e cauda menor.

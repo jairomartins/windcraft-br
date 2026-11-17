@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:function",
+  "function": "windcraft:glider_lifecycle",
+  "environment": "minecraft:default",
+  "structure": "windcraft:flight_test_space",
+  "max_ticks": 100
+}

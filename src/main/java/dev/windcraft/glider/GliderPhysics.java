@@ -56,27 +56,63 @@ public final class GliderPhysics {
     }
 
     public static Velocity step(Velocity velocity, float yaw, float pitch, Controls controls, Conditions conditions, Settings settings,float bankDegrees) {
+        // Standalone trajectory-based API. Live flight uses its own persistent nose heading.
+        double ax = velocity.x * 20 - conditions.wind.xPerTick() * 20 * settings.wind;
+        double az = velocity.z * 20 - conditions.wind.zPerTick() * 20 * settings.wind;
+        float heading = Math.hypot(ax, az) > .001 ? (float)Math.toDegrees(Math.atan2(-ax, az)) : yaw;
+        if (!Float.isFinite(yaw)) throw new IllegalArgumentException("Non-finite flight input");
+        return stepWithHeading(velocity, heading, pitch, controls, conditions, settings, bankDegrees);
+    }
+
+    public static float wrapHeading(float heading) {
+        if (!Float.isFinite(heading)) throw new IllegalArgumentException("Non-finite heading");
+        return (float)(heading - Math.floor((heading + 180.0) / 360.0) * 360.0);
+    }
+
+    /** Bank turns the nose; wind and camera yaw never select a new nose direction. */
+    public static float updateHeading(float heading, float bank, Velocity velocity, Conditions conditions, Settings settings) {
+        heading = wrapHeading(heading);
+        if (!Float.isFinite(bank)) throw new IllegalArgumentException("Non-finite bank");
+        double angle = Math.toRadians(heading);
+        double forward = (velocity.x * 20 - conditions.wind.xPerTick() * 20 * settings.wind) * -Math.sin(angle)
+            + (velocity.z * 20 - conditions.wind.zPerTick() * 20 * settings.wind) * Math.cos(angle);
+        if (forward <= .1) return heading; // No coordinated turn without forward airflow.
+        double turn = Math.toDegrees(9.81 * Math.tan(Math.toRadians(Math.clamp(bank, -settings.maxBank, settings.maxBank)))
+            / Math.max(5, forward) / 20);
+        return wrapHeading(heading + (float)turn);
+    }
+
+    /** Live flight: heading is the aircraft's nose, independent of wind drift and free look. */
+    public static Velocity stepWithHeading(Velocity velocity, float heading, float pitch, Controls controls, Conditions conditions, Settings settings, float bankDegrees) {
         if (!Double.isFinite(velocity.x) || !Double.isFinite(velocity.y) || !Double.isFinite(velocity.z)
-            || !Float.isFinite(yaw) || !Float.isFinite(pitch)) throw new IllegalArgumentException("Non-finite flight input");
-        double angle = Math.toRadians(yaw);
+            || !Float.isFinite(heading) || !Float.isFinite(pitch)) throw new IllegalArgumentException("Non-finite flight input");
+        double angle = Math.toRadians(heading);
         double ax = velocity.x * 20 - conditions.wind.xPerTick() * 20 * settings.wind;
         double ay = velocity.y * 20 - conditions.updraft;
         double az = velocity.z * 20 - conditions.wind.zPerTick() * 20 * settings.wind;
-        double h = Math.hypot(ax, az), airSpeed = Math.sqrt(h * h + ay * ay);
-        double dx = h > .001 ? ax / h : -Math.sin(angle), dz = h > .001 ? az / h : Math.cos(angle);
+        double airSpeed = Math.sqrt(ax * ax + ay * ay + az * az);
+        double dx = -Math.sin(angle), dz = Math.cos(angle);
+        double longitudinal = ax * dx + az * dz;
+        double forward = Math.max(0, longitudinal);
+        double planeSpeed = Math.hypot(forward, ay);
         if(!Float.isFinite(bankDegrees)) throw new IllegalArgumentException("Non-finite bank");
         double bank = Math.toRadians(Math.clamp(bankDegrees,-settings.maxBank,settings.maxBank));
         double attack = 8 - controls.forward * 6 - Math.clamp(pitch, -60, 60) * .08 + (controls.flare ? 12 : 0);
         double coefficient = settings.lift * Math.clamp(.8 + attack * .045, .1, 1.9);
         if (attack > 20) coefficient *= .65; // stall: pulling up indefinitely loses efficiency
         double pressureSpeed = Math.min(airSpeed, 35);
-        double lift = liftNewtons(pressureSpeed, coefficient, settings);
+        // Sideways/backwards airflow must not turn the wing into an upwind catapult.
+        double lift = longitudinal < -.001 ? 0 : liftNewtons(Math.min(planeSpeed, 35), coefficient, settings);
         double drag = dragNewtons(pressureSpeed, settings.drag + coefficient * coefficient * .07
             + (controls.flare ? .18 : 0), settings);
         double inverseSpeed = airSpeed > .001 ? 1 / airSpeed : 0;
-        double liftX = -ay * inverseSpeed * dx * Math.cos(bank) - dz * Math.sin(bank);
-        double liftZ = -ay * inverseSpeed * dz * Math.cos(bank) + dx * Math.sin(bank);
-        double liftY = h * inverseSpeed * Math.cos(bank);
+        double inversePlaneSpeed = planeSpeed > .001 ? 1 / planeSpeed : 0;
+        double liftX = -ay * inversePlaneSpeed * dx * Math.cos(bank) - dz * Math.sin(bank);
+        double liftZ = -ay * inversePlaneSpeed * dz * Math.cos(bank) + dx * Math.sin(bank);
+        double liftY = forward * inversePlaneSpeed * Math.cos(bank);
+        // Remove lift along the airflow, including sideslip during a bank: lift does no work.
+        double parallel = (liftX * ax + liftY * ay + liftZ * az) * inverseSpeed * inverseSpeed;
+        liftX -= parallel * ax; liftY -= parallel * ay; liftZ -= parallel * az;
         // Newtons / mass / 400 converts m/s² to blocks/tick²; 20 ticks = one second.
         double accelerationX = (lift * liftX - drag * ax * inverseSpeed) / MASS / 400;
         double accelerationY = (lift * liftY - drag * ay * inverseSpeed - MASS * 9.81) / MASS / 400;

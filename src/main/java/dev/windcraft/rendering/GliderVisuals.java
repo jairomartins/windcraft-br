@@ -30,6 +30,7 @@ public final class GliderVisuals {
         var pilot = PILOTS.computeIfAbsent(packet.player(), id -> new Pilot());
         if (pilot.id != packet.entityId()) { pilot.pose.reset(); pilot.previous = null; }
         pilot.bank=packet.bank();
+        pilot.heading=packet.heading();
         pilot.color=dev.windcraft.item.GliderColors.valid(packet.color());
         pilot.id = packet.entityId(); pilot.active = packet.active(); pilot.received = level.getGameTime();
     }
@@ -62,11 +63,12 @@ public final class GliderVisuals {
             if (pilot.previous != null && p.position().distanceToSqr(pilot.previous) > 24 * 24) {
                 pilot.pose.reset(); pilot.active = false; active = false;
             }
-            float heading = movement.horizontalDistanceSqr() > .0001 ? (float)Math.toDegrees(Math.atan2(-movement.x, movement.z)) : p.getYRot();
+            // Drift is ground motion, not aircraft yaw. Keep the server/predicted nose direction.
+            float heading = p == mc.player ? GliderClient.predictedHeading() : pilot.heading;
             float turn = p==mc.player ? GliderClient.predictedBank() : pilot.bank;
             float pitch = (float)-Math.toDegrees(Math.atan2(movement.y, Math.max(.01, movement.horizontalDistance())));
             pilot.pose.tick(active, heading, pitch, turn, WindVisualConfig.TRANSITIONS.get());
-            pilot.heading = heading; pilot.previous = p.position();
+            pilot.previous = p.position();
             if (!active && !pilot.pose.frame(1).visible() && world.getGameTime() - pilot.received > 40) iterator.remove();
         }
     }

@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:directory",
+      "source": "entity/glider",
+      "prefix": "entity/glider/"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "windcraft:entity/wind_glider"
+    }
+  ]
+}

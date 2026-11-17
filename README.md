@@ -1,4 +1,4 @@
-# WindCraft BR 0.6.0 — Alpha
+# WindCraft BR 0.6.1 — Alpha
 
 Vento dinâmico, nuvens em movimento, Anemômetro e um Planador de Vento craftável.
 Simulação controlada pelo servidor para Minecraft Java com Forge.
@@ -20,6 +20,18 @@ Captura enviada pelo autor, mostrando as partículas ambientais no mundo.
 **[Testes e limitações da Alpha](VALIDATION.md)** ·
 **[Sistema de voo 0.6.0](docs/GLIDER_FLIGHT_SYSTEM.md)**
 
+## Atualização 0.6.1
+
+Correções de cancelamento por Shift com pacotes agrupados,
+encerramento do uso do item e sincronização visual de
+fechamento, observadores e desconexão. Corrigida a abertura que virava contra
+o vento: o planador guarda o rumo do salto, curva por A/D e mantém a deriva.
+Mover o olhar não altera o rumo. Coeficientes e limites existentes mantidos.
+
+Versão candidata Alpha: consulte o [diagnóstico e roteiro de validação](docs/STABILITY_0.6.1.md).
+Instalação limpa, aparência, áudio, colisões e multiplayer com dois clientes ainda
+precisam de validação manual nesta versão. Não publicada.
+
 ## Novidades da 0.6.0
 
 - Novo modelo com asas laranja em leque, varetas de madeira e cauda menor.
@@ -31,9 +43,10 @@ Captura enviada pelo autor, mostrando as partículas ambientais no mundo.
 
 Em mundos de testes antigos que contenham monge ou bisão, use uma cópia: esses
 IDs de entidade não estão registrados nesta versão. Cliente e servidor devem
-usar a mesma versão, com protocolo de rede 7.
+usar o mesmo JAR atualizado, com protocolo de rede 8. Builds antigos da 0.6.1
+com protocolo 7 precisam ser substituídos também no servidor.
 
-Download do mod: [windcraft-0.6.0.jar](dist/windcraft-0.6.0.jar).
+Download do mod: [windcraft-0.6.1.jar](dist/windcraft-0.6.1.jar).
 Esta é uma versão Alpha; a validação completa de áudio, multiplayer e colisões
 ainda está pendente. Não há turbinas ou barcos nesta versão.
 
@@ -43,12 +56,12 @@ Projeto baseado no [MDK oficial](https://files.minecraftforge.net/net/minecraftf
 ## Instalar ou atualizar
 
 1. Instale Forge **66.1.8** para Minecraft 26.3 e selecione esse perfil no Launcher.
-2. Copie `dist/windcraft-0.6.0.jar` para `%APPDATA%\.minecraft\mods`, ou para a pasta
+2. Copie `dist/windcraft-0.6.1.jar` para `%APPDATA%\.minecraft\mods`, ou para a pasta
    `mods` da instância. Retire os JARs anteriores do WindCraft dessa pasta.
-3. Em multiplayer, use WindCraft 0.6.0 no servidor e em todos os clientes.
+3. Em multiplayer, use WindCraft 0.6.1 no servidor e em todos os clientes.
 
 O Forge 66.1.0 não atende à dependência deste projeto.
-Use a mesma versão 0.6.0 nos dois lados para manter as regras de ativação consistentes.
+Use a mesma versão 0.6.1 nos dois lados para manter as regras de ativação consistentes.
 
 **O balanço dos blocos de folhas foi removido**, assim como os mixins e os shaders
 de terreno correspondentes. As folhas usam a geometria original do Minecraft.

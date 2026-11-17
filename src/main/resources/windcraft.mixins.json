@@ -3,6 +3,6 @@
   "minVersion": "0.8.7",
   "package": "dev.windcraft.mixin.client",
   "compatibilityLevel": "JAVA_21",
-  "client": ["CloudRendererMixin", "FrameUniformMixin", "GliderAvatarStateMixin", "GliderAvatarRendererMixin", "GliderHumanoidPoseMixin"],
+  "client": ["WeatherEffectRendererMixin", "CloudRendererMixin", "FrameUniformMixin", "GliderAvatarStateMixin", "GliderAvatarRendererMixin", "GliderHumanoidPoseMixin"],
   "injectors": {"defaultRequire": 1}
 }

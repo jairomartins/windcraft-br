@@ -14,7 +14,66 @@ public final class FlightGameTests {
             net.minecraft.core.registries.Registries.TEST_FUNCTION,WindCraft.ID);
         tests.register("flight_registry_smoke",()->FlightGameTests::smoke);
         tests.register("glider_colors",()->FlightGameTests::colors);
+        tests.register("glider_lifecycle",()->FlightGameTests::lifecycle);
         tests.register(context.getModBusGroup());
+    }
+    private static void lifecycle(GameTestHelper helper) {
+        var pilot = helper.makeMockServerPlayer(false);
+        var hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+        var stack = new net.minecraft.world.item.ItemStack(WindCraft.WIND_GLIDER.get());
+        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA,
+            new net.minecraft.world.item.component.CustomModelData(java.util.List.of(), java.util.List.of(), java.util.List.of("blue"), java.util.List.of()));
+        pilot.setItemInHand(hand, stack);
+        var position = helper.absolutePos(new BlockPos(2, 4, 2));
+        pilot.setPos(position.getX() + .5, position.getY(), position.getZ() + .5);
+        pilot.setOnGround(true);
+        pilot.setYRot(45);
+        helper.addCleanup(_ -> GliderFlightController.remove(pilot));
+        helper.assertTrue(GliderFlightController.start(pilot, hand), "Can prepare on ground");
+        helper.assertTrue(GliderFlightController.heading(pilot) == 45, "Deployment captures facing");
+        helper.assertTrue(!GliderFlightController.isFlying(pilot), "Prepared is not airborne physics");
+        helper.assertTrue(dev.windcraft.network.WindNetwork.visual(pilot).active(), "Initial observer sees deployed state");
+        pilot.startUsingItem(hand);
+        helper.assertTrue(pilot.isUsingItem(), "Item use began");
+        helper.assertTrue(dev.windcraft.network.WindNetwork.visual(pilot).color().equals("blue"), "Observer retains selected color");
+        GliderFlightController.input(pilot, new dev.windcraft.network.WindNetwork.GliderInput(1, 1, false, false, 1));
+        // A second movement update is throttled, but a newer safety close must pass.
+        GliderFlightController.input(pilot, new dev.windcraft.network.WindNetwork.GliderInput(0, 0, false, true, 2));
+        helper.assertTrue(!GliderFlightController.isDeployed(pilot), "Close survives same-tick batching");
+        helper.assertTrue(!pilot.isUsingItem(), "Close releases managed item use");
+        helper.assertTrue(GliderFlightController.start(pilot, hand), "Can reopen after close");
+        pilot.startUsingItem(hand);
+        stack.getItem().use(pilot.level(), pilot, hand);
+        helper.assertTrue(!pilot.isUsingItem() && !GliderFlightController.isDeployed(pilot), "Item toggle also releases use");
+        helper.assertTrue(GliderFlightController.start(pilot, hand), "Reopen after item toggle");
+        GliderFlightController.input(pilot, new dev.windcraft.network.WindNetwork.GliderInput(0, 1, false, false, 5));
+        GliderFlightController.input(pilot, new dev.windcraft.network.WindNetwork.GliderInput(0, 0, false, true, 4));
+        helper.assertTrue(GliderFlightController.isDeployed(pilot), "Old close cannot override newer command");
+        GliderFlightController.input(pilot, new dev.windcraft.network.WindNetwork.GliderInput(Float.NaN, 0, false, true, 6));
+        helper.assertTrue(GliderFlightController.isDeployed(pilot), "Invalid axes rejected");
+        helper.runAfterDelay(21, () -> {
+            pilot.setYRot(90);
+            GliderFlightController.tick(new net.minecraftforge.event.TickEvent.PlayerTickEvent.Pre(pilot));
+            helper.assertTrue(GliderFlightController.heading(pilot) == 90, "Ready pilot may still choose takeoff direction");
+            helper.assertTrue(pilot.getDeltaMovement().lengthSqr() == 0, "Prepared state applies no forces");
+            pilot.setOnGround(false);
+            pilot.setYRot(120);
+            GliderFlightController.tick(new net.minecraftforge.event.TickEvent.PlayerTickEvent.Pre(pilot));
+            helper.assertTrue(GliderFlightController.bank(pilot) == 0, "Expired ground input does not bank at takeoff");
+            helper.assertTrue(GliderFlightController.isFlying(pilot), "Prepared transitions to airborne");
+            helper.assertTrue(GliderFlightController.heading(pilot) == 120, "Takeoff captures latest facing");
+            pilot.setYRot(-60);
+            helper.assertTrue(GliderFlightController.travel(pilot), "Live travel uses managed heading");
+            helper.assertTrue(GliderFlightController.heading(pilot) == 120, "Free look cannot reverse aircraft heading");
+            helper.assertTrue(pilot.getYRot() == -60, "Aircraft never overwrites camera yaw");
+            helper.assertTrue(dev.windcraft.network.WindNetwork.visual(pilot).heading() == 120, "Observer receives aircraft heading");
+            pilot.setItemInHand(hand, net.minecraft.world.item.ItemStack.EMPTY);
+            GliderFlightController.tick(new net.minecraftforge.event.TickEvent.PlayerTickEvent.Pre(pilot));
+            helper.assertTrue(!GliderFlightController.isDeployed(pilot), "Removing equipped glider closes flight");
+            helper.assertTrue(!GliderFlightController.travel(pilot), "Closed flight restores vanilla travel");
+            GliderFlightController.stop(pilot);
+            helper.succeed();
+        });
     }
     private static void colors(GameTestHelper helper) {
         var level=helper.getLevel();
@@ -61,15 +120,17 @@ public final class FlightGameTests {
         var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),level.registryAccess());
         try {
             var packet=new dev.windcraft.network.WindNetwork.FlightSnapshot("minecraft:overworld",true,8,90,3,
-                level.getGameTime(),12,40,settings,false,50,17.5f);
+                level.getGameTime(),12,40,settings,false,50,17.5f,-179.5f);
             var codec=dev.windcraft.network.WindNetwork.flightCodec();
             codec.encode(buffer,packet);
+            int flightBytes = buffer.readableBytes();
             helper.assertTrue(packet.equals(codec.decode(buffer)),"Flight snapshot codec retains bank, settings and wind");
             helper.assertTrue(buffer.readableBytes()==0,"No unread flight packet fields");
             buffer.clear();
-            var visual=new dev.windcraft.network.WindNetwork.FlightVisual(1,java.util.UUID.randomUUID(),"minecraft:overworld",true,-25,"blue");
+            var visual=new dev.windcraft.network.WindNetwork.FlightVisual(1,java.util.UUID.randomUUID(),"minecraft:overworld",true,-25,"blue",178.5f);
             var visualCodec=dev.windcraft.network.WindNetwork.visualCodec();
             visualCodec.encode(buffer,visual);
+            com.mojang.logging.LogUtils.getLogger().info("WindCraft codec fixture payload sizes: flight={} bytes, visual={} bytes (excludes channel framing)", flightBytes, buffer.readableBytes());
             helper.assertTrue(visual.equals(visualCodec.decode(buffer)),"Observer packet retains authoritative bank");
         } finally { buffer.release(); }
         var v=GliderPhysics.step(new GliderPhysics.Velocity(0,-.15,.6),0,0,
